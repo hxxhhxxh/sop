@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 民间故事短视频 · 全流程 SOP 看板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --c-bg:#fafadf;
+  --c-ink:#1a1a16;
+  --c-muted:#5e5e54;
+  --c-border:rgba(26,26,22,.42);
+  --c-border-light:rgba(26,26,22,.16);
+  --c-card-a:rgba(26,26,22,.035);
+  --c-card-b:rgba(26,26,22,.06);
+  --c-card-c:rgba(26,26,22,.012);
+  --f-sans:"Jost","Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+  --f-serif:"Lora",Georgia,"Songti SC","SimSun",serif;
+  --f-mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased}
+body{
+  background:var(--c-bg);
+  color:var(--c-ink);
+  font-family:var(--f-sans);
+  font-weight:300;
+  font-size:13px;
+  line-height:1.6;
+  letter-spacing:-.005em;
+}
+.sheet{
+  width:1180px;
+  max-width:100%;
+  margin:0 auto;
+  padding:56px 60px 72px;
+}
+
+/* ---------- decoration tokens ---------- */
+.rule{height:1px;background:var(--c-border-light);border:0;width:100%}
+.rule--short{width:88px;height:1px;background:var(--c-border);border:0}
+.kicker{
+  font-family:var(--f-mono);
+  font-size:9.5px;
+  font-weight:400;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--c-muted);
+}
+.tag{
+  display:inline-block;
+  font-family:var(--f-mono);
+  font-size:9px;
+  letter-spacing:.06em;
+  padding:.3em .8em;
+  border:1px solid var(--c-border-light);
+  border-radius:2px;
+  color:var(--c-muted);
+  white-space:nowrap;
+}
+.tag--ink{border-color:var(--c-border);color:var(--c-ink)}
+.insight-card{
+  background:var(--c-card-a);
+  border:1px solid var(--c-border-light);
+  border-radius:6px;
+  padding:18px 20px;
+}
+.insight-card--b{background:var(--c-card-b)}
+.insight-card--c{background:var(--c-card-c)}
+.slide-chrome{
+  border-bottom:1px solid var(--c-border);
+  padding-bottom:10px;
+  margin-bottom:26px;
+}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:2px solid var(--c-ink);padding-bottom:22px;margin-bottom:8px}
+.masthead__top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px}
+.masthead h1{
+  font-family:var(--f-serif);
+  font-style:italic;
+  font-weight:500;
+  font-size:52px;
+  line-height:.98;
+  letter-spacing:-.02em;
+}
+.masthead h1 small{
+  display:block;
+  font-family:var(--f-sans);
+  font-style:normal;
+  font-weight:200;
+  font-size:15px;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--c-muted);
+  margin-top:14px;
+}
+.masthead__meta{text-align:right;line-height:1.9}
+.masthead__meta div{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;color:var(--c-muted)}
+.masthead__strip{
+  display:flex;
+  gap:0;
+  border-top:1px solid var(--c-border-light);
+  padding-top:16px;
+}
+.masthead__strip > div{
+  flex:1;
+  padding-right:22px;
+  border-right:1px solid var(--c-border-light);
+  margin-right:22px;
+}
+.masthead__strip > div:last-child{border-right:0;margin-right:0;padding-right:0}
+.masthead__strip dt{font-family:var(--f-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--c-muted);margin-bottom:5px}
+.masthead__strip dd{font-size:12.5px;font-weight:400;line-height:1.5}
+
+/* ---------- section ---------- */
+section{margin-top:44px}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--c-border);padding-bottom:9px;margin-bottom:22px}
+.sec-head h2{
+  font-family:var(--f-sans);
+  font-weight:500;
+  font-size:17px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.sec-head .num{font-family:var(--f-mono);font-size:11px;color:var(--c-muted);letter-spacing:.1em}
+.sec-head .note{margin-left:auto;font-size:11px;color:var(--c-muted);font-weight:300}
+
+/* ---------- pipeline ---------- */
+.pipeline{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--c-border-light);border-radius:6px;overflow:hidden}
+.lane{padding:16px 18px 18px;border-right:1px solid var(--c-border-light)}
+.lane:last-child{border-right:0}
+.lane--a{background:var(--c-card-c)}
+.lane--b{background:var(--c-card-a)}
+.lane--c{background:var(--c-card-b)}
+.lane__title{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.lane__title strong{font-family:var(--f-serif);font-style:italic;font-weight:500;font-size:16px;letter-spacing:0}
+.chips{display:flex;flex-direction:column;gap:7px}
+.chip{display:flex;align-items:baseline;gap:9px;font-size:12.5px;line-height:1.45}
+.chip b{
+  font-family:var(--f-mono);
+  font-weight:500;
+  font-size:10px;
+  min-width:17px;
+  height:17px;
+  border:1px solid var(--c-ink);
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 17px;
+  margin-top:1px;
+}
+.chip span{font-weight:400}
+.chip em{font-style:normal;color:var(--c-muted);font-size:11px;letter-spacing:.02em}
+.chip--key b{background:var(--c-ink);color:var(--c-bg)}
+.lane__foot{margin-top:13px;padding-top:11px;border-top:1px solid var(--c-border-light);font-size:11px;color:var(--c-muted);line-height:1.5}
+
+/* ---------- step grid ---------- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{
+  background:var(--c-card-a);
+  border:1px solid var(--c-border-light);
+  border-radius:6px;
+  padding:16px 18px 17px;
+  break-inside:avoid;
+  display:flex;
+  flex-direction:column;
+}
+.step--key{background:var(--c-card-b);border-color:var(--c-border)}
+.step__hd{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--c-border-light);padding-bottom:9px;margin-bottom:11px}
+.step__no{font-family:var(--f-mono);font-size:23px;font-weight:300;line-height:1;letter-spacing:-.03em}
+.step__ti{font-family:var(--f-sans);font-weight:500;font-size:14.5px;letter-spacing:.02em;line-height:1.2}
+.step__tool{margin-left:auto;font-family:var(--f-mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-muted);border:1px solid var(--c-border-light);border-radius:2px;padding:.25em .55em;white-space:nowrap}
+.step ol{list-style:none;counter-reset:s}
+.step ol li{
+  counter-increment:s;
+  position:relative;
+  padding-left:19px;
+  font-size:12px;
+  line-height:1.55;
+  margin-bottom:6px;
+}
+.step ol li::before{
+  content:counter(s);
+  position:absolute;left:0;top:.15em;
+  font-family:var(--f-mono);font-size:9px;color:var(--c-muted);
+}
+.step ol li:last-child{margin-bottom:0}
+.step ol li b{font-weight:500}
+.step ol{flex:1 1 auto}
+.step__out{margin-top:12px;padding-top:10px;border-top:1px solid var(--c-border-light);display:flex;flex-wrap:wrap;gap:5px}
+.step__warn{margin-top:10px;font-size:11px;line-height:1.5;color:var(--c-muted);font-family:var(--f-serif);font-style:italic}
+.step__warn strong{font-family:var(--f-sans);font-style:normal;font-weight:500;color:var(--c-ink);letter-spacing:.04em}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--c-border-light);vertical-align:top;line-height:1.45}
+thead th{
+  font-family:var(--f-mono);
+  font-size:9px;
+  font-weight:400;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--c-muted);
+  border-bottom:1px solid var(--c-border);
+  padding-bottom:6px;
+}
+tbody tr:last-child td{border-bottom:0}
+td.mono{font-family:var(--f-mono);font-size:11px;letter-spacing:-.01em}
+td.k{font-weight:500}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px}
+.col-ti{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--c-muted);margin-bottom:9px;padding-bottom:6px;border-bottom:1px solid var(--c-border)}
+
+/* ---------- checklist ---------- */
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:0 30px}
+.check{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--c-border-light);font-size:12.5px;line-height:1.45}
+.box{
+  flex:0 0 13px;width:13px;height:13px;margin-top:2px;
+  border:1px solid var(--c-ink);border-radius:2px;background:transparent;
+}
+.check em{font-style:normal;color:var(--c-muted);font-size:11px;font-family:var(--f-mono);letter-spacing:-.01em}
+
+/* ---------- prompt slots ---------- */
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.slot{border:1px solid var(--c-border-light);border-radius:6px;padding:14px 14px 15px;background:var(--c-card-c);display:flex;flex-direction:column}
+.slot .kicker{display:block;margin-bottom:7px}
+.slot strong{display:block;font-family:var(--f-serif);font-style:italic;font-weight:500;font-size:14px;line-height:1.25;margin-bottom:9px;flex:1 1 auto}
+.slot .line{height:1px;background:var(--c-border-light);margin:7px 0}
+.slot .use{font-size:11px;color:var(--c-muted);min-height:2.9em}
+
+/* ---------- footer ---------- */
+footer{margin-top:48px;padding-top:16px;border-top:2px solid var(--c-ink);display:flex;justify-content:space-between;align-items:baseline}
+footer p{font-family:var(--f-mono);font-size:9px;letter-spacing:.09em;color:var(--c-muted);text-transform:uppercase}
+footer .sig{font-family:var(--f-serif);font-style:italic;font-size:13px;color:var(--c-muted);text-transform:none;letter-spacing:0}
+
+/* ---------- print ---------- */
+@media print{
+  @page{size:A3 portrait;margin:12mm}
+  body{background:#fff;font-size:10.5px}
+  .sheet{width:100%;padding:0}
+  .masthead h1{font-size:40px}
+  section{margin-top:26px;break-inside:avoid}
+  .step,.insight-card,.slot,.lane{break-inside:avoid}
+  .steps{gap:10px}
+  footer{margin-top:26px}
+}
+@media (max-width:900px){
+  .sheet{padding:32px 24px 48px}
+  .masthead__top{flex-direction:column;gap:16px}
+  .masthead__meta{text-align:left}
+  .masthead h1{font-size:36px}
+  .masthead__strip{flex-direction:column;gap:14px}
+  .masthead__strip > div{border-right:0;margin-right:0;padding-right:0;padding-bottom:14px;border-bottom:1px solid var(--c-border-light)}
+  .pipeline,.steps,.slots,.two-col,.three-col,.checks{grid-template-columns:1fr}
+  .lane{border-right:0;border-bottom:1px solid var(--c-border-light)}
+  .slots{gap:10px}
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<!-- ===== MASTHEAD ===== -->
+<header class="masthead">
+  <div class="masthead__top">
+    <h1>民间故事短视频<small>Standard Operating Procedure · 9 Steps</small></h1>
+    <div class="masthead__meta">
+      <div>REV. 2026-09-16</div>
+      <div>DEEPSEEK · DOUBAO · CAPCUT</div>
+      <div>SINGLE-PAGE BOARD / PRINTABLE</div>
+    </div>
+  </div>
+  <div class="masthead__strip">
+    <div>
+      <dt>Cycle Time</dt>
+      <dd>熟练后单条 <b>1.5–2.5 h</b></dd>
+    </div>
+    <div>
+      <dt>Bottleneck</dt>
+      <dd>Step 6 生视频额度 · Step 7 音画同步</dd>
+    </div>
+    <div>
+      <dt>Critical Step</dt>
+      <dd>Step 3 断句 — 字数编译为镜头表</dd>
+    </div>
+    <div>
+      <dt>Consistency Chain</dt>
+      <dd>Step 4 素描图 → Step 6 参考图</dd>
+    </div>
+  </div>
+</header>
+
+<!-- ===== PIPELINE ===== -->
+<section>
+  <div class="sec-head">
+    <span class="num">A</span>
+    <h2>流程总览</h2>
+    <span class="note">三层流水线 · 九个工序</span>
+  </div>
+  <div class="pipeline">
+    <div class="lane lane--a">
+      <div class="lane__title"><strong>文案层</strong><span class="kicker">Step 1–3</span></div>
+      <div class="chips">
+        <div class="chip"><b>1</b><span>软件下载<em> · 三件套就位</em></span></div>
+        <div class="chip"><b>2</b><span>故事生成<em> · 扒原文 + 换人物换场景</em></span></div>
+        <div class="chip chip--key"><b>3</b><span>断句优化<em> · 字数 → 秒数 → 镜头表</em></span></div>
+      </div>
+      <div class="lane__foot">输出：带序号的镜头清单 + 总镜头数。此层决定后面全部工作量。</div>
+    </div>
+    <div class="lane lane--b">
+      <div class="lane__title"><strong>素材层</strong><span class="kicker">Step 4–6</span></div>
+      <div class="chips">
+        <div class="chip chip--key"><b>4</b><span>主角三视图<em> · 转素描图存档</em></span></div>
+        <div class="chip"><b>5</b><span>动态分镜文案<em> · 按句号逐条生成</em></span></div>
+        <div class="chip"><b>6</b><span>视频生成<em> · 带参考图 + 去水印按序存</em></span></div>
+      </div>
+      <div class="lane__foot">输出：按分镜序号命名的无水印竖屏片段。素描图是人物一致性的唯一锚点。</div>
+    </div>
+    <div class="lane lane--c">
+      <div class="lane__title"><strong>成片层</strong><span class="kicker">Step 7–9</span></div>
+      <div class="chips">
+        <div class="chip"><b>7</b><span>视频剪辑<em> · 配音 / 卡点 / BGM / 字幕</em></span></div>
+        <div class="chip"><b>8</b><span>封面制作<em> · 3:4 模板可复用</em></span></div>
+        <div class="chip"><b>9</b><span>作品发布<em> · 文案 + 话题 + AI 声明</em></span></div>
+      </div>
+      <div class="lane__foot">输出：1080P / 60fps 成片 + 3:4 自制封面 + 发布配套文案。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NINE STEPS ===== -->
+<section>
+  <div class="sec-head">
+    <span class="num">B</span>
+    <h2>九步工序卡</h2>
+    <span class="note">深色卡为关键工序，偷懒必返工</span>
+  </div>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step__hd"><span class="step__no">01</span><span class="step__ti">软件下载</span><span class="step__tool">Setup</span></div>
+      <ol>
+        <li><b>DeepSeek</b> — 改写故事、三视图 / 分镜 / 封面 / 发布提示词</li>
+        <li><b>豆包</b> — 三视图、封面图、分镜视频（建议备多账号）</li>
+        <li><b>剪映</b> — 配音、剪辑、字幕、封面排版、导出</li>
+        <li>微信小程序 — 文案提取神器 + 去水印（金丝雀去水印）</li>
+        <li>手机便签 — 断句与镜头计数</li>
+      </ol>
+      <div class="step__out"><span class="tag">文案</span><span class="tag">图像</span><span class="tag">后期</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step__hd"><span class="step__no">02</span><span class="step__ti">故事生成</span><span class="step__tool">抖快 · 小程序 · DS</span></div>
+      <ol>
+        <li>抖音 / 快手搜「民间故事」，选高播放爆款 → 转发 → <b>复制链接</b></li>
+        <li>微信「文案提取神器」粘贴链接 → 提取<b>视频原文案</b></li>
+        <li>DeepSeek 输入：原文案 + 改编指令 + 改编思路</li>
+        <li>改编思路：<b>换人物</b>（书生→屠户 / 货郎 / 渔夫）<b>换场景</b>（破庙→老宅 / 坟地 / 荒村）</li>
+      </ol>
+      <div class="step__out"><span class="tag tag--ink">产出 · 改写故事文案</span></div>
+      <p class="step__warn"><strong>红线</strong> 只借结构与母题，人物场景细节全部重写，避免搬运判定。</p>
+    </div>
+
+    <div class="step step--key">
+      <div class="step__hd"><span class="step__no">03</span><span class="step__ti">断句优化</span><span class="step__tool">手机便签 · 人工</span></div>
+      <ol>
+        <li>把改写文案粘进便签，<b>人工</b>逐句切分</li>
+        <li><b>23–45 字 → 10 秒</b>镜头（首选，主力档）</li>
+        <li><b>≤ 22 字 → 5 秒</b>镜头（仅用于前后割裂的单句）</li>
+        <li><b>&gt; 45 字 → 必须拆分</b>（硬性规则）</li>
+        <li>每句末尾加句号 + 单独换行 → 便签序号功能编号 → 得<b>总镜头数</b></li>
+      </ol>
+      <div class="step__out"><span class="tag tag--ink">产出 · 带序号镜头表</span><span class="tag">校对语病</span></div>
+      <p class="step__warn"><strong>为何手工</strong> 顺带修正 AI 改写的生硬句；提前锁定镜头，大幅减少后期返工与补镜头。</p>
+    </div>
+
+    <div class="step step--key">
+      <div class="step__hd"><span class="step__no">04</span><span class="step__ti">主角三视图</span><span class="step__tool">DS + 豆包</span></div>
+      <ol>
+        <li>DeepSeek：改写文案 + 三视图指令 → <b>人物三视图文案</b></li>
+        <li>豆包生图参数：<b>模型 4.5 · 9:16 · 人像摄影</b></li>
+        <li>只做 <b>2–3 个高频主角</b>，次要配角不做</li>
+        <li>风控关键：发送指令「<b>转素描图</b>」，保存素描图备用</li>
+      </ol>
+      <div class="step__out"><span class="tag tag--ink">产出 · 角色素描参考图</span></div>
+      <p class="step__warn"><strong>双重作用</strong> 既规避真人图审核风险，又是 Step 6 保证人物统一的唯一参考源。</p>
+    </div>
+
+    <div class="step">
+      <div class="step__hd"><span class="step__no">05</span><span class="step__ti">动态分镜文案</span><span class="step__tool">DeepSeek</span></div>
+      <ol>
+        <li>DeepSeek 开<b>新对话</b> → 粘贴专属动态分镜指令</li>
+        <li>粘贴已断句完成的<b>完整</b>故事文案</li>
+        <li>发送 → AI 按句号自动拆分，输出标准化单镜头提示词</li>
+        <li>按分镜序号<b>逐条复制</b>留存</li>
+      </ol>
+      <div class="step__out"><span class="tag tag--ink">产出 · 逐镜头提示词</span></div>
+      <p class="step__warn"><strong>注意</strong> 手机剪贴板通常最多 15 组，分镜多时分批处理或转存便签。</p>
+    </div>
+
+    <div class="step">
+      <div class="step__hd"><span class="step__no">06</span><span class="step__ti">视频生成</span><span class="step__tool">豆包 · 去水印</span></div>
+      <ol>
+        <li>模型：额度足选 <b>Fast</b>（画质好，约日 3 条）；额度紧选 <b>Mini</b>（约日 50 秒）</li>
+        <li>画幅 <b>9:16</b> 竖屏；时长匹配该镜头字数（5s / 10s）</li>
+        <li>点「+」上传对应角色<b>素描参考图</b></li>
+        <li>长按视频 → 分享 → 复制链接 → 去水印小程序解析保存</li>
+        <li><b>务必按分镜顺序命名</b>，剪辑时免于重排</li>
+      </ol>
+      <div class="step__out"><span class="tag tag--ink">产出 · 无水印竖屏片段</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step__hd"><span class="step__no">07</span><span class="step__ti">视频剪辑</span><span class="step__tool">剪映</span></div>
+      <ol>
+        <li>开始创作 → 按分镜顺序勾选 → 勾<b>高清导入</b></li>
+        <li>文本 → 新建文本 → 粘贴文案 → 选<b>不分句</b>（单次 ≤ 500 字）</li>
+        <li>文本朗读选说书音色（沉稳 / 深度解说 / 古风男主），<b>1.0–1.15 倍速</b>；文本框拖出画面外，只留配音轨</li>
+        <li>音画同步：画面长则裁尾，短则轻微变速；每段结尾对齐语气句空白</li>
+        <li>音频 → 音乐 → 古风纯音乐铺满，音量 <b>10–15</b></li>
+        <li>字幕 → 开始识别；字号 <b>10–15</b>，白 / 黄色；加小字「本视频由 AI 制作，故事纯属虚构」</li>
+        <li>导出 <b>1080P · 60 帧</b>，码率格式默认</li>
+      </ol>
+      <div class="step__out"><span class="tag tag--ink">产出 · 成片</span></div>
+      <p class="step__warn"><strong>变速红线</strong> 幅度控制在 ±15% 内，画面速度须接近正常人节奏。</p>
+    </div>
+
+    <div class="step">
+      <div class="step__hd"><span class="step__no">08</span><span class="step__ti">封面制作</span><span class="step__tool">DS + 豆包 + 剪映</span></div>
+      <ol>
+        <li>DeepSeek 输入封面提示词 + 构图 / 风格构思 → 输出封面描述，全选复制</li>
+        <li>豆包生图：<b>比例 3:4 · 风格人像摄影</b> → 保存满意图</li>
+        <li>剪映导入 → 比例设 <b>3:4</b> → 文本加主标题 + 副标题</li>
+        <li>选民间故事风格字体，调大小 / 位置 / 颜色 → 全屏预览 → <b>截图保存</b></li>
+        <li><b>存为封面模板</b>，后续换图换字复用</li>
+      </ol>
+      <div class="step__out"><span class="tag tag--ink">产出 · 3:4 自制封面</span><span class="tag">模板可复用</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step__hd"><span class="step__no">09</span><span class="step__ti">作品发布</span><span class="step__tool">DS + 抖音</span></div>
+      <ol>
+        <li>DeepSeek 粘贴发布文案指令 → 生成标题主题 + 正文 → 复制到抖音编辑区</li>
+        <li>抖音底部「+」上传成片</li>
+        <li>「更换封面」→ 上传 3:4 自制封面</li>
+        <li>添加 <b>5 个</b>高播放话题</li>
+        <li>勾选「<b>内容由 AI 生成</b>」自主声明</li>
+      </ol>
+      <div class="step__out"><span class="tag">#民间故事</span><span class="tag">#奇闻异事</span><span class="tag">#民间传说</span><span class="tag">#奇闻奇事</span><span class="tag">#奇闻趣事</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== PARAMS ===== -->
+<section>
+  <div class="sec-head">
+    <span class="num">C</span>
+    <h2>关键参数速查</h2>
+    <span class="note">照抄即可，不需临场判断</span>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="col-ti">断句 → 镜头时长对照（Step 3 核心）</div>
+      <table>
+        <thead><tr><th>段落字数</th><th>镜头时长</th><th>使用说明</th></tr></thead>
+        <tbody>
+          <tr><td class="mono k">23 – 45 字</td><td class="mono k">10 秒</td><td>主力档，尽量都落这一档</td></tr>
+          <tr><td class="mono k">≤ 22 字</td><td class="mono k">5 秒</td><td>仅用于与前后割裂、无法合并的单句</td></tr>
+          <tr><td class="mono k">&gt; 45 字</td><td class="mono k">必须拆分</td><td>硬性规则，不可保留</td></tr>
+        </tbody>
+      </table>
+      <div class="col-ti" style="margin-top:22px">发布节奏与平台路径（Step 9）</div>
+      <table>
+        <thead><tr><th>项目</th><th>取值</th></tr></thead>
+        <tbody>
+          <tr><td class="k">发布时段</td><td class="mono">07:00–09:00 · 12:00–14:00 · 18:00–21:00</td></tr>
+          <tr><td class="k">起步平台</td><td>集中抖音 + 快手更新</td></tr>
+          <tr><td class="k">抖音 1 万粉</td><td>可入驻快手「燎原计划」</td></tr>
+          <tr><td class="k">5 万–10 万粉</td><td>拓展拼多多、支付宝、今日头条</td></tr>
+        </tbody>
+      </table>
+      <div class="col-ti" style="margin-top:22px">工序产出物流转</div>
+      <table>
+        <thead><tr><th>Step</th><th>交出的东西</th><th>被谁消费</th></tr></thead>
+        <tbody>
+          <tr><td class="mono k">03</td><td>带序号镜头表</td><td class="mono">05 · 07</td></tr>
+          <tr><td class="mono k">04</td><td>角色素描参考图</td><td class="mono">06</td></tr>
+          <tr><td class="mono k">05</td><td>逐镜头提示词</td><td class="mono">06</td></tr>
+          <tr><td class="mono k">06</td><td>无水印竖屏片段</td><td class="mono">07</td></tr>
+          <tr><td class="mono k">08</td><td>3:4 自制封面</td><td class="mono">09</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="col-ti">全流程固定参数</div>
+      <table>
+        <thead><tr><th>环节</th><th>参数</th></tr></thead>
+        <tbody>
+          <tr><td class="k">三视图生图</td><td class="mono">豆包 4.5 / 9:16 / 人像摄影 → 转素描图</td></tr>
+          <tr><td class="k">生视频</td><td class="mono">Fast 或 Mini / 9:16 / 5s 或 10s / 带参考图</td></tr>
+          <tr><td class="k">Fast 额度</td><td class="mono">约单日 3 条（画质优先）</td></tr>
+          <tr><td class="k">Mini 额度</td><td class="mono">约单日 50 秒（数量优先）</td></tr>
+          <tr><td class="k">配音</td><td class="mono">不分句 / 单次 ≤ 500 字 / 1.0–1.15×</td></tr>
+          <tr><td class="k">BGM 音量</td><td class="mono">10 – 15</td></tr>
+          <tr><td class="k">字幕</td><td class="mono">字号 10–15 / 白色或黄色</td></tr>
+          <tr><td class="k">变速幅度</td><td class="mono">± 15% 以内</td></tr>
+          <tr><td class="k">导出</td><td class="mono">1080P / 60 fps / 码率格式默认</td></tr>
+          <tr><td class="k">封面比例</td><td class="mono">3 : 4</td></tr>
+          <tr><td class="k">话题数量</td><td class="mono">5 个</td></tr>
+          <tr><td class="k">剪贴板上限</td><td class="mono">约 15 组分镜</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHECKLIST ===== -->
+<section>
+  <div class="sec-head">
+    <span class="num">D</span>
+    <h2>成片自检清单</h2>
+    <span class="note">导出前逐项勾选 · 打印后可手写</span>
+  </div>
+  <div class="checks">
+    <label class="check"><span class="box"></span><span>开头 3 秒有悬念 / 冲突 / 猎奇感 <em>最强钩子必须前置</em></span></label>
+    <label class="check"><span class="box"></span><span>字幕无错别字</span></label>
+    <label class="check"><span class="box"></span><span>画面节奏不过快、不过慢</span></label>
+    <label class="check"><span class="box"></span><span>字幕断句合理，与配音同步</span></label>
+    <label class="check"><span class="box"></span><span>画面与音乐卡点匹配</span></label>
+    <label class="check"><span class="box"></span><span>已加片内小字「AI 制作 · 纯属虚构」</span></label>
+    <label class="check"><span class="box"></span><span>配音清晰完整、无断字</span></label>
+    <label class="check"><span class="box"></span><span>发布勾选「内容由 AI 生成」</span></label>
+    <label class="check"><span class="box"></span><span>BGM 音量合适 <em>10–15%</em></span></label>
+    <label class="check"><span class="box"></span><span>导出 1080P / 60fps 已确认</span></label>
+    <label class="check"><span class="box"></span><span>10 秒镜头为主，5 秒镜头不过多</span></label>
+    <label class="check"><span class="box"></span><span>封面 3:4 已替换为自制图</span></label>
+  </div>
+</section>
+
+<!-- ===== PROMPT SLOTS ===== -->
+<section>
+  <div class="sec-head">
+    <span class="num">E</span>
+    <h2>五组指令模具</h2>
+    <span class="note">流程的「模具」，质量决定产出稳定性 — 待沉淀</span>
+  </div>
+  <div class="slots">
+    <div class="slot">
+      <span class="kicker">P1</span>
+      <strong>故事改编指令</strong>
+      <div class="line"></div>
+      <p class="use">用于 Step 2 ③ · 换人物 + 换场景重写</p>
+    </div>
+    <div class="slot">
+      <span class="kicker">P2</span>
+      <strong>三视图指令</strong>
+      <div class="line"></div>
+      <p class="use">用于 Step 4 ① · 生成人物三视图文案</p>
+    </div>
+    <div class="slot">
+      <span class="kicker">P3</span>
+      <strong>动态分镜指令</strong>
+      <div class="line"></div>
+      <p class="use">用于 Step 5 · 按句号拆单镜头提示词</p>
+    </div>
+    <div class="slot">
+      <span class="kicker">P4</span>
+      <strong>封面提示词</strong>
+      <div class="line"></div>
+      <p class="use">用于 Step 8 ① · 生成封面画面描述</p>
+    </div>
+    <div class="slot">
+      <span class="kicker">P5</span>
+      <strong>发布文案指令</strong>
+      <div class="line"></div>
+      <p class="use">用于 Step 9 ① · 生成标题主题 + 正文</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RISK & OPTIMIZATION ===== -->
+<section>
+  <div class="sec-head">
+    <span class="num">F</span>
+    <h2>风控 · 效率 · 质量</h2>
+    <span class="note">三层风控叠加，缺一不可</span>
+  </div>
+  <div class="three-col">
+    <div class="insight-card insight-card--b">
+      <span class="kicker">Risk Control · 三道闸</span>
+      <hr class="rule--short" style="margin:9px 0 12px">
+      <ol style="list-style:none;counter-reset:r">
+        <li style="counter-increment:r;position:relative;padding-left:19px;font-size:12px;line-height:1.55;margin-bottom:8px"><span style="position:absolute;left:0;font-family:var(--f-mono);font-size:9px;color:var(--c-muted)">1</span><b style="font-weight:500">源头</b> — 真人风格图统一「转素描图」再用于生视频</li>
+        <li style="counter-increment:r;position:relative;padding-left:19px;font-size:12px;line-height:1.55;margin-bottom:8px"><span style="position:absolute;left:0;font-family:var(--f-mono);font-size:9px;color:var(--c-muted)">2</span><b style="font-weight:500">成片</b> — 片内小字标注「AI 制作 / 纯属虚构」</li>
+        <li style="counter-increment:r;position:relative;padding-left:19px;font-size:12px;line-height:1.55;margin-bottom:8px"><span style="position:absolute;left:0;font-family:var(--f-mono);font-size:9px;color:var(--c-muted)">3</span><b style="font-weight:500">平台</b> — 发布勾选「内容由 AI 生成」</li>
+        <li style="counter-increment:r;position:relative;padding-left:19px;font-size:12px;line-height:1.55"><span style="position:absolute;left:0;font-family:var(--f-mono);font-size:9px;color:var(--c-muted)">4</span><b style="font-weight:500">内容</b> — 换人物 + 换场景，不做同题材同人物复述</li>
+      </ol>
+    </div>
+    <div class="insight-card">
+      <span class="kicker">Efficiency · 五个提速点</span>
+      <hr class="rule--short" style="margin:9px 0 12px">
+      <ol style="list-style:none">
+        <li style="font-size:12px;line-height:1.55;margin-bottom:8px;padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--c-muted)">·</span>封面做成模板，只换图换字 — 单条省约 15 分钟</li>
+        <li style="font-size:12px;line-height:1.55;margin-bottom:8px;padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--c-muted)">·</span>素描参考图按角色归档，同 IP 系列持续复用</li>
+        <li style="font-size:12px;line-height:1.55;margin-bottom:8px;padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--c-muted)">·</span>断句阶段一次定死镜头数，避免 Step 6 回头补生成</li>
+        <li style="font-size:12px;line-height:1.55;margin-bottom:8px;padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--c-muted)">·</span>豆包多账号轮换，拆开生视频额度瓶颈</li>
+        <li style="font-size:12px;line-height:1.55;padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--c-muted)">·</span>分镜文案批量存便签，不依赖剪贴板</li>
+      </ol>
+    </div>
+    <div class="insight-card insight-card--c">
+      <span class="kicker">Quality · 三条判断</span>
+      <hr class="rule--short" style="margin:9px 0 12px">
+      <ol style="list-style:none">
+        <li style="font-size:12px;line-height:1.55;margin-bottom:8px;padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--c-muted)">·</span>开头 3 秒必须是全片最强钩子，必要时把高潮镜头前置</li>
+        <li style="font-size:12px;line-height:1.55;margin-bottom:8px;padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--c-muted)">·</span>以 10 秒镜头为主，5 秒镜头过多会显得碎</li>
+        <li style="font-size:12px;line-height:1.55;padding-left:14px;position:relative"><span style="position:absolute;left:0;color:var(--c-muted)">·</span>变速幅度控制在 ±15% 内，超过会明显违和</li>
+      </ol>
+      <hr class="rule" style="margin:14px 0 11px">
+      <p style="font-family:var(--f-serif);font-style:italic;font-size:12px;line-height:1.55;color:var(--c-muted)">整套方法的机关在 Step 3：把文案编译成镜头表。镜头数一旦确定，Step 6–7 便只是流水线执行。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>AI Folk-tale Short Video · SOP Board · 9 Steps · Rev. 2026-09-16</p>
+  <p class="sig">整理自九张流程导图 — 原图作者 @老理儿</p>
+</footer>
+
+</div>
+</body>
+</html>
