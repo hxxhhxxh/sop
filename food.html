@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 美食原产地短视频 · SOP 工作台</title>
+<style>
+:root{
+  --bg:#f6f4ef; --card:#fff; --ink:#1d1b18; --ink2:#4a463f; --ink3:#857f74;
+  --line:#e3ded3; --brand:#a8341f; --brand2:#c4693c; --gold:#b4893a;
+  --ok:#2f7d55; --warn:#b26a12; --bad:#a8341f;
+  --r:14px; --sh:0 1px 2px rgba(29,27,24,.06),0 8px 24px rgba(29,27,24,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;}
+a{color:var(--brand)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+
+/* header */
+header{background:linear-gradient(160deg,#2a1d17,#4a2a1c 60%,#5d3320);color:#f7f1e6;padding:26px 0 22px;
+  border-bottom:3px solid var(--gold)}
+.htop{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
+.h1{font-size:25px;font-weight:800;letter-spacing:.5px;margin:0}
+.h1 small{display:block;font-size:12px;font-weight:400;color:#e7c99a;letter-spacing:2px;margin-top:4px}
+.chain{font-size:13px;color:#e9d9be}
+.chain b{color:#fff}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;
+  padding:7px 13px;border-radius:9px;font-size:13px;cursor:pointer;transition:.15s}
+.btn:hover{background:rgba(255,255,255,.2)}
+.btn.solid{background:var(--gold);border-color:var(--gold);color:#2a1d17;font-weight:700}
+.stat{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13px;color:#e9d9be}
+.bar{flex:1;min-width:200px;height:8px;background:rgba(255,255,255,.18);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#e7c99a);transition:.4s}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(246,244,239,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line)}
+.navin{max-width:1180px;margin:0 auto;padding:9px 20px;display:flex;gap:6px;overflow-x:auto}
+.navin a{flex:none;text-decoration:none;color:var(--ink2);font-size:13px;padding:6px 12px;border-radius:8px;white-space:nowrap}
+.navin a:hover{background:#eae5d9;color:var(--brand)}
+.navin a b{color:var(--brand);margin-right:4px}
+
+/* section */
+section{margin-top:34px;scroll-margin-top:56px}
+.sh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.sh .tag{background:var(--brand);color:#fff;width:26px;height:26px;border-radius:8px;
+  display:grid;place-items:center;font-size:14px;font-weight:800;flex:none}
+.sh h2{margin:0;font-size:19px;letter-spacing:.5px}
+.sh p{margin:0;font-size:12.5px;color:var(--ink3)}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:860px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px;box-shadow:var(--sh)}
+.card h3{margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:7px}
+.card h3 em{font-style:normal;font-size:11px;color:#fff;background:var(--brand2);padding:2px 7px;border-radius:99px}
+.card p{margin:6px 0;font-size:13.5px;color:var(--ink2)}
+.kv{font-size:13px;color:var(--ink2)}
+.kv div{display:flex;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.kv div:last-child{border:0}
+.kv span:first-child{color:var(--ink3);flex:none;min-width:82px}
+ul.li{margin:8px 0 0;padding-left:18px;font-size:13.5px;color:var(--ink2)}
+ul.li li{margin:4px 0}
+.pill{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);
+  color:var(--ink3);background:#faf8f3;margin:2px 4px 2px 0}
+.hi{background:#fdf6e8;border-color:#eddcb8;color:var(--warn)}
+.hg{background:#eef7f1;border-color:#cbe4d5;color:var(--ok)}
+.hr{background:#fbeeeb;border-color:#f0cfc7;color:var(--bad)}
+
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#faf8f3;color:var(--ink3);font-weight:600;font-size:12.5px}
+tbody tr:hover{background:#fcfaf5}
+code{background:#f2ede2;padding:1px 5px;border-radius:5px;font-size:12.5px}
+
+/* steps */
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;box-shadow:var(--sh);
+  position:relative;transition:.15s}
+.step.done{background:#f3f8f4;border-color:#cbe4d5}
+.step .no{position:absolute;top:14px;right:14px;font-size:26px;font-weight:800;color:#ece6da;line-height:1}
+.step.done .no{color:#c6e0d0}
+.step h4{margin:0 0 4px;font-size:15px;padding-right:36px}
+.step .who{font-size:11.5px;color:#fff;background:var(--ink2);padding:2px 8px;border-radius:99px;display:inline-block;margin-bottom:8px}
+.step .io{font-size:12.5px;color:var(--ink3);border-top:1px dashed var(--line);margin-top:9px;padding-top:8px}
+.step .io b{color:var(--ink2);font-weight:600}
+.ck{display:flex;align-items:flex-start;gap:8px;font-size:13.5px;color:var(--ink2);cursor:pointer;padding:3px 0}
+.ck input{margin-top:5px;flex:none;accent-color:var(--brand);width:15px;height:15px}
+.ck input:checked+span{color:var(--ink3);text-decoration:line-through}
+.mark{margin-top:10px;font-size:12.5px;color:var(--brand);cursor:pointer;user-select:none;
+  border:1px dashed var(--brand);border-radius:8px;padding:5px 9px;display:inline-block}
+.step.done .mark{color:var(--ok);border-color:var(--ok)}
+
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 11px;
+  font:13px/1.65 ui-monospace,Menlo,Consolas,monospace;background:#fdfcf9;color:var(--ink);resize:vertical}
+textarea:focus,input:focus{outline:2px solid #e7d3a8;border-color:var(--gold)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.mini{font-size:12px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;
+  color:var(--ink2);cursor:pointer}
+.mini:hover{border-color:var(--brand);color:var(--brand)}
+.mini.p{background:var(--brand);border-color:var(--brand);color:#fff}
+.out{background:#fdfcf9;border:1px solid var(--line);border-radius:10px;padding:10px;min-height:120px;max-height:420px;overflow:auto}
+.num{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.num div{background:#faf8f3;border:1px solid var(--line);border-radius:10px;padding:8px 14px;min-width:96px}
+.num b{display:block;font-size:20px;color:var(--brand)}
+.num span{font-size:11.5px;color:var(--ink3)}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink3)}
+.toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(20px);opacity:0;
+  background:#2a1d17;color:#fff;padding:9px 18px;border-radius:99px;font-size:13px;transition:.25s;pointer-events:none;z-index:99}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media print{
+  nav,.tools,.mark,.mini,.btn{display:none!important}
+  body{background:#fff}
+  header{background:#2a1d17!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card,.step{break-inside:avoid;box-shadow:none}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="htop">
+    <div>
+      <h1 class="h1">AI 美食原产地短视频 · SOP 工作台<small>REGIONAL FOOD ORIGIN PIPELINE</small></h1>
+      <div class="chain">DeepSeek 文案 · <b>史实核查</b> · 豆包 图/视频 · 剪映 后期 · 抖音发布</div>
+    </div>
+    <div class="tools">
+      <button class="btn" onclick="window.print()">打印 / 存 PDF</button>
+      <button class="btn" onclick="expJSON()">导出进度 JSON</button>
+      <button class="btn solid" onclick="clr()">清空本地进度</button>
+    </div>
+  </div>
+  <div class="stat">
+    <span id="pt">0 / 10 工序</span>
+    <div class="bar"><i id="pb"></i></div>
+    <span id="pt2">自检 0/14 · 核查 0/6</span>
+  </div>
+</div>
+</header>
+
+<nav><div class="navin">
+  <a href="#A"><b>A</b>流程总览</a>
+  <a href="#B"><b>B</b>十步工序</a>
+  <a href="#C"><b>C</b>断句计算器</a>
+  <a href="#D"><b>D</b>指令模具</a>
+  <a href="#E"><b>E</b>参数速查</a>
+  <a href="#F"><b>F</b>史实核查闸</a>
+  <a href="#G"><b>G</b>成片自检</a>
+  <a href="#H"><b>H</b>风控与提效</a>
+  <a href="#I"><b>I</b>选题库</a>
+</div></nav>
+
+<div class="wrap">
+
+<section id="A">
+<div class="sh"><span class="tag">A</span><h2>流程总览</h2><p>点击工序卡可直接标记完成 · 单条熟练后 2–3 小时</p></div>
+<div class="grid g4">
+  <div class="card"><h3>单条周期<em>节奏</em></h3><p>2–3 小时/条。比民间故事多出的 30 分钟，全部花在 <b>Step 2 史实核查</b>。</p></div>
+  <div class="card"><h3>主要瓶颈<em>额度</em></h3><p>Step 7 生视频额度 · Step 8 音画同步 · <b>成品菜特写镜头的真实感</b>。</p></div>
+  <div class="card"><h3>最关键工序<em>命门</em></h3><p><b>Step 2 史实核查</b>：美食号一旦说错朝代/皇帝，评论区第一条就是打假。</p></div>
+  <div class="card"><h3>一致性链路<em>贯穿</em></h3><p>Step 5 风格锚图（灶台/器皿/服饰）→ Step 7 逐镜头复用，保证全片是同一个"朝代"。</p></div>
+</div>
+
+<div class="grid g3" style="margin-top:14px">
+  <div class="card"><h3>文案层<em>DeepSeek</em></h3><p>产出：<b>可溯源</b>的分镜级解说稿 + 断句编号 + 总镜头数。每个史实断言后带方括号标注来源。</p></div>
+  <div class="card"><h3>素材层<em>豆包</em></h3><p>产出：朝代风格锚图 + 成品菜特写图 + 按序命名的无水印竖屏分镜视频。</p></div>
+  <div class="card"><h3>成片层<em>剪映 · 抖音</em></h3><p>产出：1080P/60fps 成片 + 3:4 封面 + 带地域话题的发布文案。</p></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h3>美食号 vs 民间故事号：三个必须改掉的地方</h3>
+<table><thead><tr><th style="width:15%">维度</th><th style="width:40%">民间故事号做法</th><th>美食原产地号必须改成</th></tr></thead><tbody>
+<tr><td>真实性</td><td>纯虚构，标注"故事纯属虚构"即可</td><td><b>半纪实</b>。工艺、地理、非遗名录、地标产品必须真；只有人物对话和场景细节可以合理演绎，且要在片尾标注"民间传说"</td></tr>
+<tr><td>去重方式</td><td>换人物、换场景，重写细节</td><td><b>不能换核心事实</b>（不能把德州扒鸡搬去河南）。改的是<b>切入视角</b>：从帝王视角 → 换成运河船工视角 / 火车站小贩视角 / 第八代传人视角</td></tr>
+<tr><td>镜头构成</td><td>人物叙事镜头为主</td><td><b>叙事 6 : 工艺特写 4</b>。老汤翻滚、蜂蜜刷皮、油炸上色、抖鸡脱骨，这类"食欲镜头"是完播率的命</td></tr>
+</tbody></table>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h3>工具与辅助</h3>
+<div class="grid g2">
+<div><div class="kv">
+<div><span>DeepSeek</span><span>解说稿改写、史实清单、分镜/封面/发布文案提示词</span></div>
+<div><span>豆包</span><span>风格锚图、成品菜特写、分镜短视频（多账号轮换额度）</span></div>
+<div><span>剪映</span><span>配音、剪辑、字幕、封面排版、导出</span></div>
+<div><span>核查来源</span><span>省/市政府门户、非遗名录、地理标志公告、地方志（见 F 区）</span></div>
+</div></div>
+<div><div class="kv">
+<div><span>文案提取</span><span>微信小程序扒对标视频原文案，只取结构不取句子</span></div>
+<div><span>去水印</span><span>解析保存竖屏素材到相册</span></div>
+<div><span>手机便签</span><span>人工断句 + 自带序号功能，直接得镜头数</span></div>
+<div><span>实拍补充</span><span>本地超市/老字号门店实拍 3–5 秒真菜镜头，插在片中大幅提升可信度</span></div>
+</div></div>
+</div>
+</div>
+</section>
+
+<section id="B">
+<div class="sh"><span class="tag">B</span><h2>十步工序卡</h2><p>完成状态自动存本地，关页面不丢</p></div>
+<div class="grid g2" id="steps"></div>
+</section>
+
+<section id="C">
+<div class="sh"><span class="tag">C</span><h2>断句计算器</h2><p>Step 4 专用 · 按句号自动切分并算镜头时长</p></div>
+<div class="grid g2">
+<div class="card">
+  <h3>粘贴 DeepSeek 改写后的解说稿</h3>
+  <textarea id="src" rows="14" placeholder="把成稿粘进来，按句号/问号/叹号/分号自动切分。&#10;规则：23–45 字 = 10 秒镜头（主力）；≤22 字 = 5 秒；>45 字必须拆分。"></textarea>
+  <div class="row">
+    <button class="mini p" onclick="calc()">计算镜头表</button>
+    <button class="mini" onclick="demo()">填入示例</button>
+    <button class="mini" onclick="cpTable()">复制镜头表</button>
+    <button class="mini" onclick="document.getElementById('src').value='';calc()">清空</button>
+  </div>
+  <p style="font-size:12.5px;color:var(--ink3);margin-top:10px">
+  <b>为什么这步必须手工过一遍：</b><br>
+  · 通读校对语病（AI 改写常有生硬句）<br>
+  · 提前锁定独立镜头，减少后期返工与补镜头<br>
+  · <b>美食号额外一条</b>：每锁定一个工艺镜头，就在便签对应序号后写上"特写"，Step 7 生视频时单独换提示词</p>
+</div>
+<div class="card">
+  <h3>字数 → 镜头时长对照</h3>
+  <table><thead><tr><th>段落字数</th><th>镜头时长</th><th>说明</th></tr></thead><tbody>
+  <tr><td>23–45 字</td><td><b>10 秒</b>（首选）</td><td>主力镜头，尽量都落在这一档</td></tr>
+  <tr><td>≤ 22 字</td><td>5 秒</td><td>仅用于与前后割裂、无法合并的单句</td></tr>
+  <tr><td>&gt; 45 字</td><td><span class="pill hr">必须拆分</span></td><td>硬性规则，不可保留</td></tr>
+  </tbody></table>
+  <div class="num">
+    <div><b id="n1">0</b><span>总镜头</span></div>
+    <div><b id="n2">0</b><span>预估片长(秒)</span></div>
+    <div><b id="n3">0</b><span>10 秒档</span></div>
+    <div><b id="n4">0</b><span>待拆分</span></div>
+  </div>
+  <div class="out" id="tbl"><p style="color:var(--ink3);font-size:13px;margin:0">左侧粘贴解说稿后点「计算镜头表」，这里会列出逐镜头字数、时长与需要拆分的句子。</p></div>
+</div>
+</div>
+</section>
+<section id="D">
+<div class="sh"><span class="tag">D</span><h2>六组指令模具</h2><p>已按美食原产地题材预填 · 可直接改关键词复制到 DeepSeek / 豆包 · 修改自动存本地</p></div>
+<div class="grid g2" id="molds"></div>
+</section>
+
+<section id="E">
+<div class="sh"><span class="tag">E</span><h2>参数速查</h2><p>照抄即可 · 不需要临场判断</p></div>
+<div class="grid g2">
+<div class="card">
+<h3>固定参数表</h3>
+<table><thead><tr><th style="width:30%">环节</th><th>参数</th></tr></thead><tbody>
+<tr><td>风格锚图生成</td><td>豆包 模型 4.5 / 9:16 / 人像摄影 → 再转素描图</td></tr>
+<tr><td>成品菜特写图</td><td>9:16 / <b>美食摄影</b>，暖光、浅景深、蒸汽可见；<b>不转素描</b>，保留质感</td></tr>
+<tr><td>生视频</td><td>Fast 或 Mini / 9:16 / 5s 或 10s / 带参考图</td></tr>
+<tr><td>断句</td><td>23–45字=10s，≤22字=5s，&gt;45字必拆</td></tr>
+<tr><td>配音</td><td>不分句，单次 ≤500 字，1.0–1.1 倍速（美食比故事略慢，留出咀嚼感）</td></tr>
+<tr><td>BGM</td><td>音量 8–13，比故事号更低，不盖"滋滋"音效</td></tr>
+<tr><td>音效</td><td>油炸滋响、开锅蒸汽、剁刀声，各 1–2 处，音量 15–20</td></tr>
+<tr><td>字幕</td><td>字号 10–15，白色为主；<b>菜名与年代用黄色</b></td></tr>
+<tr><td>导出</td><td>1080P / 60fps，码率格式默认</td></tr>
+<tr><td>封面</td><td>比例 3:4，成品菜大特写 + 6 字以内钩子文字</td></tr>
+<tr><td>话题</td><td>5 个：#菜名 #地名美食 #中国四大名鸡 #非遗美食 #原产地</td></tr>
+</tbody></table>
+</div>
+<div class="card">
+<h3>豆包生视频模型选择</h3>
+<table><thead><tr><th>模型</th><th>适用</th><th>日额度参考</th></tr></thead><tbody>
+<tr><td>Fast</td><td>成品菜特写、工艺镜头（画质优先）</td><td>约 3 条</td></tr>
+<tr><td>Mini</td><td>叙事过渡镜头、街景空镜</td><td>约 50 秒</td></tr>
+</tbody></table>
+<p style="font-size:12.5px;color:var(--ink3);margin-top:8px">额度紧张时的取舍：<b>把 Fast 全部留给"食欲镜头"</b>，人物远景一律 Mini。观众记住的是那只鸡，不是路人。</p>
+
+<h3 style="margin-top:16px">产出物流转表</h3>
+<table><thead><tr><th>产出物</th><th>产于</th><th>用于</th></tr></thead><tbody>
+<tr><td>史实清单（含来源）</td><td>Step 2</td><td>Step 3 撰稿 · Step 9 片尾标注</td></tr>
+<tr><td>解说稿定稿</td><td>Step 3</td><td>Step 4 断句 · Step 5 锚图</td></tr>
+<tr><td>断句稿 + 镜头数</td><td>Step 4</td><td>Step 6 分镜 · Step 8 配音</td></tr>
+<tr><td>风格锚图 + 菜品特写图</td><td>Step 5</td><td>Step 7 逐镜头参考图</td></tr>
+<tr><td>单镜头提示词</td><td>Step 6</td><td>Step 7 依序生视频</td></tr>
+<tr><td>无水印分镜视频</td><td>Step 7</td><td>Step 8 按序导入</td></tr>
+<tr><td>1080P 成片</td><td>Step 8</td><td>Step 10 上传</td></tr>
+<tr><td>3:4 封面 + 发布文案</td><td>Step 9</td><td>抖音发布编辑区</td></tr>
+</tbody></table>
+
+<h3 style="margin-top:16px">发布节奏</h3>
+<div class="kv">
+<div><span>饭前档</span><span>11:00–12:30（美食号黄金档，胜过早间档）</span></div>
+<div><span>晚饭档</span><span>17:30–19:00（第一优先）</span></div>
+<div><span>夜宵档</span><span>21:30–23:00（完播率高，容易爆）</span></div>
+</div>
+<p style="font-size:12.5px;color:var(--ink3);margin-top:6px">美食号不要用 07:00 早间档，空腹刷到反而划走。</p>
+
+<h3 style="margin-top:16px">参考 BGM · 音色</h3>
+<div class="kv">
+<div><span>BGM</span><span>古风纯音乐（市井烟火感）/ 舌尖式弦乐 / 轻快民乐小调</span></div>
+<div><span>音色</span><span>沉稳解说、纪录片男声、市井说书（避免过度悬疑音色）</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="F">
+<div class="sh"><span class="tag">F</span><h2>史实核查闸</h2><p>美食号的命门 · 每条视频发布前逐项打勾 · 状态自动保存</p></div>
+<div class="card" style="border-color:#f0cfc7;background:#fdf7f5">
+<h3>为什么这一区是新增的：一个真实的翻车样本</h3>
+<p style="font-size:13.5px">对标视频原话是<b>"这就是乾隆皇帝连连称赞的美味，也是中国四大名鸡之一"</b>。核查后发现两处错位：</p>
+<table><thead><tr><th style="width:22%">视频说法</th><th style="width:39%">核查结果</th><th>正确写法</th></tr></thead><tbody>
+<tr><td>乾隆连连称赞德州扒鸡</td><td><span class="pill hr">人物错位</span>赞德州扒鸡的是<b>康熙</b>——第四次南巡住在启蒙老师田雯家，田雯献扒鸡，帝赞"真乃神州一奇也"，并御笔题《寒绿堂》。乾隆年间的记载是<b>艺人王暄进宫专做扒鸡</b>、扒鸡列为山东贡品。</td><td>"康熙尝过它，乾隆把它端上了御膳桌"——两个皇帝都用上，信息量更大且站得住</td></tr>
+<tr><td>连连称赞（暗示"色香味三绝"）</td><td><span class="pill hr">菜品错位</span>"色、香、味三绝"是<b>嘉庆</b>南巡过河南道口时赞<b>道口烧鸡</b>的，不是德州扒鸡。</td><td>德州扒鸡用"真乃神州一奇也"；"三绝"留给道口烧鸡那一期</td></tr>
+<tr><td>中国四大名鸡之一</td><td><span class="pill hg">成立</span>四大名鸡 = 山东德州扒鸡、河南道口烧鸡、安徽符离集烧鸡、辽宁沟帮子熏鸡。</td><td>可直接沿用，还能顺势做成 4 期系列</td></tr>
+</tbody></table>
+<p style="font-size:12.5px;color:var(--ink3);margin-top:8px">教训：这类"皇帝+名菜"的说法在自媒体里互相抄袭，错误会被复制放大。<b>凡是出现具体皇帝、具体年份、具体名号，一律去省市政府门户或地方志核对。</b></p>
+</div>
+
+<div class="grid g2" style="margin-top:14px">
+<div class="card">
+<h3>六道核查项<em>硬门槛</em></h3>
+<div id="fact"></div>
+</div>
+<div class="card">
+<h3>优先核查来源（按可信度排序）</h3>
+<div class="kv">
+<div><span>一档</span><span>省 / 市人民政府门户网站的地方美食、地方志、年鉴栏目</span></div>
+<div><span>一档</span><span>国家级 / 省级非物质文化遗产名录公示、国家地理标志保护产品公告</span></div>
+<div><span>二档</span><span>省级党媒、文旅厅官网专题（如运河美食专题）</span></div>
+<div><span>三档</span><span>老字号企业官网的品牌史（有商业美化倾向，只取工艺细节）</span></div>
+<div><span>不用</span><span>短视频文案、聚合号、AI 生成的百科式内容——本次错误就出自这一层</span></div>
+</div>
+<h3 style="margin-top:16px">三种模糊表述的安全写法</h3>
+<table><thead><tr><th style="width:34%">不确定的情况</th><th>安全说法</th></tr></thead><tbody>
+<tr><td>传说来源不唯一</td><td>"当地流传着这样一个说法……"</td></tr>
+<tr><td>年份有多种记载</td><td>"距今三百多年" 替代 "1692 年"</td></tr>
+<tr><td>皇帝身份存疑</td><td>只说 "清代宫廷贡品"，不点名皇帝</td></tr>
+</tbody></table>
+<p style="font-size:12.5px;color:var(--ink3);margin-top:8px">口径原则：<b>宁可少一个信息点，不要多一个错误点。</b>美食号的账号资产就是可信度。</p>
+</div>
+</div>
+</section>
+<section id="G">
+<div class="sh"><span class="tag">G</span><h2>成片自检清单</h2><p>导出前逐项过 · 勾选状态自动保存</p></div>
+<div class="grid g2">
+<div class="card"><h3>逐项自检<em>14 项</em></h3><div id="chk"></div></div>
+<div class="card">
+<h3>导出设置</h3>
+<p>右上「导出」→ <b>1080P · 60 帧</b>，码率与格式保持默认。</p>
+<h3 style="margin-top:14px">音画同步口诀</h3>
+<div class="kv">
+<div><span>画面 &gt; 配音</span><span>拖尾部裁剪</span></div>
+<div><span>画面 &lt; 配音</span><span>变速轻微拉长，幅度控制 ±15% 内</span></div>
+<div><span>特写镜头</span><span>宁可留 0.5 秒空白让观众看清菜，也不要压缩</span></div>
+</div>
+<h3 style="margin-top:14px">必带声明</h3>
+<div class="kv">
+<div><span>片内小字</span><span>「画面由 AI 生成，历史情节据民间传说演绎」</span></div>
+<div><span>发布勾选</span><span>「内容由 AI 生成」</span></div>
+<div><span>史实来源</span><span>片尾一屏小字列出核查来源（如"据德州市地方志"），显著提升说服力与抗举报能力</span></div>
+</div>
+<h3 style="margin-top:14px">三条质量判断</h3>
+<ul class="li">
+<li>开头 3 秒必须是<b>成品菜特写 + 一句悬念</b>，不要从"元末明初"讲起</li>
+<li>工艺特写镜头占比不低于 1/3，5 秒碎镜头不超过 3 个</li>
+<li>变速幅度 ±15% 内，超过明显违和</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="H">
+<div class="sh"><span class="tag">H</span><h2>风控 · 提效</h2><p>质量决定账号能不能长期跑下去</p></div>
+<div class="grid g3">
+<div class="card"><h3>五道风控闸</h3><ul class="li">
+<li><b>史实闸</b>：F 区六项全绿才允许进入配音（美食号最重要的一道）</li>
+<li><b>真人闸</b>：出现真人风格画面统一转素描图再生视频</li>
+<li><b>标注闸</b>：片内小字 +「内容由 AI 生成」双标注</li>
+<li><b>品牌闸</b>：不点名批评任何在售品牌，不做"哪家最正宗"的排他结论，避免商誉纠纷</li>
+<li><b>去重闸</b>：核心事实不能改，改<b>切入视角</b>与镜头语言，不做同视角复述</li>
+</ul></div>
+<div class="card"><h3>六个提速点</h3><ul class="li">
+<li>封面做模板，只换图换字，单条省 15 分钟</li>
+<li><b>建"朝代素材库"</b>：清代灶台、运河码头、绿皮火车站台锚图归档复用，跨期通用</li>
+<li>断句阶段一次定死镜头数，避免 Step 7 补生成</li>
+<li>豆包多账号轮换，拆开生视频额度瓶颈</li>
+<li>分镜文案批量存便签，不依赖剪贴板（上限约 15 组）</li>
+<li><b>核查一次做一片区</b>：查四大名鸡时把 4 只鸡的史实一次查完，够做 4 期</li>
+</ul></div>
+<div class="card"><h3>选题去重：一菜多拍的六个视角</h3><ul class="li">
+<li><b>帝王视角</b>：贡品、御膳、题匾</li>
+<li><b>市井视角</b>：码头小贩提篮叫卖、往船上抛鸡</li>
+<li><b>交通视角</b>：绿皮火车站台叫卖，一只鸡如何走遍全国</li>
+<li><b>匠人视角</b>：某代传人公开祖传秘方 / 花几十年赎回商标</li>
+<li><b>工艺视角</b>：八味老汤、先武后文的火候</li>
+<li><b>对比视角</b>：同一条运河上，扒鸡如何变成烧鸡</li>
+</ul>
+<p style="font-size:12.5px;color:var(--ink3);margin-top:8px">同一只鸡用 6 个视角能出 6 条，事实不变，叙事完全不同——这是美食号取代"换人物换场景"的去重方式。</p></div>
+</div>
+</section>
+
+<section id="I">
+<div class="sh"><span class="tag">I</span><h2>选题库：四大名鸡系列</h2><p>已核查的开局四期 · 直接照排</p></div>
+<div class="card">
+<table><thead><tr><th style="width:13%">期数</th><th style="width:15%">菜品</th><th style="width:14%">产地</th><th style="width:29%">已核查的硬事实</th><th>推荐钩子与视角</th></tr></thead><tbody>
+<tr><td>第 1 期</td><td>德州扒鸡</td><td>山东德州</td><td>全称"五香脱骨扒鸡"；1692 年伙计煮过火意外得法；马秀才题名；<b>康熙</b>赞"真乃神州一奇也"并题《寒绿堂》；<b>乾隆</b>年间艺人王暄进宫、列为贡品；国家级非遗；誉"天下第一鸡"</td><td>钩子："一个打瞌睡的伙计，煮出了后来进宫的贡品。" 视角：市井 + 帝王双线</td></tr>
+<tr><td>第 2 期</td><td>道口烧鸡</td><td>河南滑县道口</td><td>创于清顺治十八年（1661）；乾隆五十二年张炳得御厨刘义传"要想烧鸡香，八料加老汤"，店号"义兴张"；<b>嘉庆</b>南巡赞"色、香、味三绝"成清廷贡品；元宝造型；省级非遗 + 国家地理标志</td><td>钩子："十个字的秘方，救活了一家快关门的烧鸡铺。" 视角：匠人报恩</td></tr>
+<tr><td>第 3 期</td><td>符离集烧鸡</td><td>安徽宿州符离镇</td><td>形成于 20 世纪初，原名韩家扒鸡，1951 年政府定名；1910 年德州"五香扒鸡"艺人管再州随女迁来，后成"管家红曲鸡"；1915 年魏广明改良定型；中国地理标志产品</td><td>钩子："这只鸡的祖籍，其实在山东。" 视角：运河迁徙</td></tr>
+<tr><td>第 4 期</td><td>沟帮子熏鸡</td><td>辽宁北镇沟帮子</td><td>始创于清光绪十五年（1889）；创始人尹玉成因行善偶遇御厨得宫廷熏鸡秘方；十六道工序、三十种配料、四代老汤</td><td>钩子："一次善举，换来一张宫廷秘方。" 视角：匠人 + 工艺</td></tr>
+</tbody></table>
+<p style="font-size:12.5px;color:var(--ink3);margin-top:10px">
+<b>系列化打法：</b>4 期用同一套封面模板、同一个音色、同一句片头口播（"中国四大名鸡，第 X 只"），第 5 期做合集横评收割流量。<br>
+<b>后续片区：</b>四大名鸡跑完可接——中华三大名醋、四大名面、运河沿线美食、地理标志名肉，每个片区都能一次核查、批量产出。</p>
+</div>
+</section>
+
+<footer>
+本工作台在「AI 民间故事短视频 · SOP 工作台」的 A–G 结构基础上，针对<b>美食原产地</b>题材改造：新增 F 区史实核查闸、I 区选题库，工序由 9 步扩为 10 步（插入 Step 2 史实核查），并把去重逻辑从"换人物换场景"改为"换切入视角"。<br>
+I 区与 F 区的史实均经检索核对，主要来源：山东省人民政府「经典鲁菜 德州扒鸡」、德州市人民政府《德州年鉴》、闪电新闻《历史上的德州美食》、江苏省文化和旅游厅《舌尖上的大运河》。整理时间 2026-09-17。
+</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var K='foodsop_v1';
+var S=JSON.parse(localStorage.getItem(K)||'{"step":{},"chk":{},"fact":{},"mold":{}}');
+function save(){localStorage.setItem(K,JSON.stringify(S));stat();}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');
+  clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on')},1600);}
+
+var STEPS=[
+{n:1,t:'定选题与视角',w:'人工',d:'从 I 区选题库或片区清单里挑一菜，确定本期<b>唯一切入视角</b>（帝王/市井/交通/匠人/工艺/对比），写成一句话。',i:'交付：一句话选题（菜名 + 视角 + 钩子）',o:'去 Step 2'},
+{n:2,t:'史实核查',w:'人工 + 搜索',d:'把选题里所有<b>可验证断言</b>列成清单（年代、皇帝、创始人、名号、非遗/地标身份、工艺步骤），逐条到 F 区一档来源核对，标记 ✅成立 / ⚠️改口径 / ❌删除。',i:'交付：史实清单（断言 + 结论 + 来源名）',o:'这一步就是美食号的护城河，不能省'},
+{n:3,t:'撰写解说稿',w:'DeepSeek',d:'用 D 区「解说稿改写」模具，把史实清单喂给 DeepSeek，要求 <b>只允许使用清单内事实</b>，禁止自行补充年代与人名。',i:'交付：解说稿定稿（600–900 字）',o:'成稿后自己再通读一遍抓语病'},
+{n:4,t:'断句与镜头表',w:'人工 + C 区',d:'粘进 C 区计算器切分，&gt;45 字全部拆开；在便签用序号编号，<b>给工艺镜头标注"特写"</b>。',i:'交付：断句稿 + 总镜头数 + 特写标记',o:'一次定死镜头数，后面不补生成'},
+{n:5,t:'风格锚图 + 菜品图',w:'豆包',d:'生成两类锚图：①朝代风格锚图（灶台/器皿/服饰/街景，转素描）；②<b>成品菜特写图（美食摄影，不转素描）</b>。',i:'交付：锚图 2–4 张，按角色/场景命名归档',o:'锚图决定全片是否像同一个朝代'},
+{n:6,t:'逐镜头提示词',w:'DeepSeek',d:'用 D 区「分镜提示词」模具批量生成，叙事镜头与特写镜头用两套模板，按镜头号命名。',i:'交付：编号提示词组，存便签',o:'每组 ≤15 条，超了分批'},
+{n:7,t:'生成分镜视频',w:'豆包',d:'带参考图依序生视频，9:16，5s/10s 按镜头表；<b>Fast 优先给特写镜头</b>，去水印后按镜头号命名保存。',i:'交付：无水印竖屏分镜视频 N 条',o:'额度瓶颈在此，多账号轮换'},
+{n:8,t:'配音剪辑字幕',w:'剪映',d:'先导配音（不分句，≤500 字，1.0–1.1 倍速），再按序铺画面对齐，加音效与 BGM，字幕菜名年代用黄色。',i:'交付：完成音画同步的时间线',o:'音画不齐按 G 区口诀处理'},
+{n:9,t:'封面与发布文案',w:'豆包 + DeepSeek',d:'3:4 成品菜大特写封面 + 6 字内钩子；发布文案用 D 区模具，配 5 个话题；<b>片尾加一屏来源小字</b>。',i:'交付：封面图 + 发布文案 + 话题',o:'封面套模板，只换图换字'},
+{n:10,t:'导出与发布',w:'剪映 · 抖音',d:'1080P/60fps 导出，过一遍 G 区 14 项自检与 F 区 6 项核查，勾选「内容由 AI 生成」，按 E 区饭点档发布。',i:'交付：已发布视频 + 数据回看',o:'48 小时后回看完播率，定下一期视角'}
+];
+
+var CHK=['画面与配音全程对齐，误差 ≤0.3 秒','变速幅度均在 ±15% 内','开头 3 秒是成品菜特写 + 悬念句','工艺特写镜头占比 ≥1/3','5 秒碎镜头不超过 3 个','所有镜头方向为竖屏 9:16，无黑边','字幕无错别字，菜名与年代为黄色','菜名、地名、年代与史实清单完全一致','音效（油炸/开锅）已加且不盖人声','BGM 音量 8–13，铺满全片','片内小字「画面由 AI 生成，历史情节据民间传说演绎」已加','片尾一屏史实来源小字已加','导出参数 1080P / 60fps','封面 3:4，文字 ≤6 字且不被裁切'];
+
+var FACT=['朝代与皇帝：每个出现的皇帝/年号都在一档来源中核对过，未出现"张冠李戴"（如把康熙的评价记到乾隆名下）','年份与创始人：具体年份、人名有一档或二档来源支撑；有分歧的改为"距今三百多年"这类模糊表述','荣誉与名号：非遗级别（国家级/省级）、地理标志、老字号身份准确，不夸大级别','并称类说法：如"四大名鸡"的四个成员已核对齐全，未凭印象凑数','工艺描述：配料数量、工序步数、火候顺序与来源一致，不臆造"秘方"细节','品牌口径：未点名贬低在售品牌，未下"唯一正宗"结论，无商誉风险'];
+
+var MOLDS=[
+{k:'m1',t:'① 史实清单核查指令',s:'用于 Step 2',v:'我要做一条关于「【菜名】」的美食原产地科普短视频。请把下面这段网传说法拆成一份【可验证断言清单】：\n\n【粘贴网传文案】\n\n输出要求：\n1. 逐条列出断言，分类标注类型：朝代/皇帝、年份、创始人、名号荣誉、并称说法、工艺细节、地理产地。\n2. 每条标注核查优先级（高/中/低），凡涉及具体皇帝、具体年份、具体名号的一律为高。\n3. 每条给出【建议核查来源类型】：省市政府门户、地方志年鉴、非遗名录、地理标志公告。\n4. 明确指出其中哪些断言在自媒体中常被混淆，混淆点是什么。\n5. 不要给我结论，只给核查清单——结论我自己去官方来源确认。'},
+{k:'m2',t:'② 解说稿改写指令',s:'用于 Step 3',v:'你是一个美食纪录片解说撰稿人。请依据下面这份【已核查史实清单】，写一条 60–90 秒竖屏短视频的解说稿。\n\n【史实清单】\n（粘贴 Step 2 核查后的清单，每条注明来源）\n\n硬性要求：\n1. 【只能使用清单内的事实】，禁止自行补充任何年代、人名、皇帝、数字；需要过渡时用"当地流传"这类模糊表述。\n2. 本期切入视角为：【市井 / 帝王 / 交通 / 匠人 / 工艺 / 对比】，全程保持这一视角，不要切换。\n3. 开头 3 秒必须是成品菜的强钩子，先给食欲和悬念，不要从"元末明初"讲起。\n4. 全文 600–900 字，短句为主，每句不超过 45 字。\n5. 至少安排 3 处工艺细节描写（火候、上色、脱骨、老汤），要能拍成特写。\n6. 结尾一句留互动钩子（提问或征集）。\n7. 每个史实句后用方括号标注它来自清单第几条，方便我回查。'},
+{k:'m3',t:'③ 风格锚图提示词指令',s:'用于 Step 5',v:'请为一条讲述【菜名 + 朝代 + 产地】的竖屏短视频，生成风格锚图提示词，供豆包生图使用。\n\n输出两组：\n【A 组 · 朝代风格锚图】3 条，9:16 人像摄影风格，内容分别为：老灶台与铁锅、市井街巷/码头、主要人物半身像（服饰符合该朝代该地域该身份）。要求统一光线、统一色调、统一年代质感，便于后续逐镜头复用。\n\n【B 组 · 成品菜特写图】3 条，9:16 美食摄影风格，暖光、浅景深、可见蒸汽与油润光泽，分别为：整鸡摆盘全景、手撕脱骨瞬间、老汤翻滚特写。\n\n每条提示词包含：主体、动作、环境、光线、镜头（景别+角度）、质感关键词。B 组不要写"素描""插画"，要保留真实食物质感。禁止在画面中出现任何文字。'},
+{k:'m4',t:'④ 分镜视频提示词指令',s:'用于 Step 6',v:'下面是我已断好句、编好号的解说稿，每句对应一个镜头，标注了时长与是否为特写：\n\n【粘贴断句稿，格式：01｜10s｜叙事｜句子…】\n\n请为每个镜头生成一条豆包生视频提示词，规则：\n1. 【叙事镜头】：人物动作 + 环境 + 缓慢运镜（推/摇/跟），氛围与该朝代锚图一致。\n2. 【特写镜头】：只拍食物或手部动作，微距或近景，强调蒸汽、油光、纤维、汤汁流动，运镜极简。\n3. 每条注明景别、运镜方式、时长（5s/10s），与我给的时长一致。\n4. 竖屏 9:16，画面内不出现任何文字与字幕。\n5. 严格按 01、02、03 编号输出，方便我按序生成和命名。\n6. 不要合并镜头，不要增删镜头数量。'},
+{k:'m5',t:'⑤ 封面文案指令',s:'用于 Step 9',v:'请为这条讲【菜名 + 核心钩子】的美食短视频，设计封面方案。\n\n输出：\n1. 封面主视觉描述（3:4 竖版，成品菜大特写，暖光食欲感），可直接给豆包生图。\n2. 主标题 5 组，每组【不超过 6 个字】，要有悬念或反差（示例风格："睡过头的贡品"）。\n3. 副标题 5 组，每组不超过 10 字，交代产地或身份（示例："山东德州 · 国家级非遗"）。\n4. 文字建议摆放位置与颜色（保证在信息流小图下仍清晰可读）。\n5. 不要出现"震惊""绝了"这类低质词。'},
+{k:'m6',t:'⑥ 发布文案与话题指令',s:'用于 Step 9',v:'请为这条美食原产地短视频写抖音发布文案。\n\n视频内容：【一句话概括】\n本期视角：【视角】\n\n输出：\n1. 正文 3 版，每版 60–120 字，第一句就是钩子，结尾带互动提问（问观众家乡的同类美食 / 问吃过没）。\n2. 每版配 5 个话题标签，组合规则：1 个菜名标签 + 1 个地域美食标签 + 1 个品类标签（如 #中国四大名鸡）+ 1 个非遗/地标标签 + 1 个泛流量标签。\n3. 再给一句 15 字内的置顶评论，用来补充史实来源（示例："资料据德州市地方志，欢迎德州老乡补充"）。\n4. 不要点名贬低任何在售品牌，不下"唯一正宗"结论。'}
+];
+
+function renderSteps(){
+  document.getElementById('steps').innerHTML=STEPS.map(function(s){
+    var d=S.step[s.n]?' done':'';
+    return '<div class="step'+d+'" id="st'+s.n+'"><span class="no">'+(s.n<10?'0'+s.n:s.n)+'</span>'+
+    '<h4>Step '+s.n+'　'+s.t+'</h4><span class="who">'+s.w+'</span>'+
+    '<p>'+s.d+'</p><div class="io"><b>'+s.i+'</b><br>'+s.o+'</div>'+
+    '<span class="mark" onclick="tg('+s.n+')">'+(d?'✓ 已完成，点击撤销':'标记为已完成')+'</span></div>';
+  }).join('');
+}
+function tg(n){S.step[n]=!S.step[n];save();renderSteps();}
+
+function renderChk(){
+  document.getElementById('chk').innerHTML=CHK.map(function(t,i){
+    return '<label class="ck"><input type="checkbox" '+(S.chk[i]?'checked':'')+' onchange="ck('+i+',this.checked)"><span>'+t+'</span></label>';
+  }).join('');
+}
+function ck(i,v){S.chk[i]=v;save();}
+
+function renderFact(){
+  document.getElementById('fact').innerHTML=FACT.map(function(t,i){
+    return '<label class="ck"><input type="checkbox" '+(S.fact[i]?'checked':'')+' onchange="fk('+i+',this.checked)"><span>'+t+'</span></label>';
+  }).join('');
+}
+function fk(i,v){S.fact[i]=v;save();}
+
+function renderMolds(){
+  document.getElementById('molds').innerHTML=MOLDS.map(function(m){
+    var v=(S.mold[m.k]!==undefined?S.mold[m.k]:m.v);
+    return '<div class="card"><h3>'+m.t+'<em>'+m.s+'</em></h3>'+
+    '<textarea rows="12" id="'+m.k+'" oninput="mv(\''+m.k+'\')">'+v.replace(/</g,'&lt;')+'</textarea>'+
+    '<div class="row"><button class="mini p" onclick="cp(\''+m.k+'\')">复制</button>'+
+    '<button class="mini" onclick="rs(\''+m.k+'\')">恢复默认</button></div></div>';
+  }).join('');
+}
+function mv(k){S.mold[k]=document.getElementById(k).value;save();}
+function rs(k){delete S.mold[k];save();renderMolds();toast('已恢复默认');}
+function cp(k){var t=document.getElementById(k);t.select();
+  navigator.clipboard.writeText(t.value).then(function(){toast('已复制到剪贴板')},function(){document.execCommand('copy');toast('已复制')});}
+
+function stat(){
+  var dn=STEPS.filter(function(s){return S.step[s.n]}).length;
+  document.getElementById('pt').textContent=dn+' / 10 工序';
+  document.getElementById('pb').style.width=(dn/10*100)+'%';
+  var c=0,f=0,i;
+  for(i=0;i<CHK.length;i++) if(S.chk[i]) c++;
+  for(i=0;i<FACT.length;i++) if(S.fact[i]) f++;
+  document.getElementById('pt2').textContent='自检 '+c+'/14 · 核查 '+f+'/6';
+}
+
+/* 断句计算器 */
+var LAST=[];
+function calc(){
+  var raw=document.getElementById('src').value.replace(/\s+/g,'');
+  var parts=raw.split(/(?<=[。！？；!?;])/).filter(function(x){return x.replace(/[。！？；!?;]/g,'').length>0});
+  var rows=[],t=0,ten=0,split=0;
+  parts.forEach(function(p,i){
+    var n=p.replace(/[。！？；、，,!?;：:""'']/g,'').length;
+    var sec,cls,note;
+    if(n>45){sec=0;cls='hr';note='必须拆分';split++;}
+    else if(n>=23){sec=10;cls='hg';note='10 秒主力';ten++;t+=10;}
+    else{sec=5;cls='hi';note='5 秒短镜';t+=5;}
+    rows.push({no:i+1,n:n,sec:sec,note:note,cls:cls,txt:p});
+  });
+  LAST=rows;
+  document.getElementById('n1').textContent=rows.length-split;
+  document.getElementById('n2').textContent=t;
+  document.getElementById('n3').textContent=ten;
+  document.getElementById('n4').textContent=split;
+  if(!rows.length){document.getElementById('tbl').innerHTML='<p style="color:var(--ink3);font-size:13px;margin:0">没有检测到句子，请检查是否有句号分隔。</p>';return;}
+  document.getElementById('tbl').innerHTML='<table><thead><tr><th>#</th><th>字数</th><th>时长</th><th>句子</th></tr></thead><tbody>'+
+   rows.map(function(r){return '<tr><td>'+(r.no<10?'0'+r.no:r.no)+'</td><td>'+r.n+'</td><td><span class="pill '+r.cls+'">'+(r.sec?r.sec+'s':r.note)+'</span></td><td>'+r.txt+'</td></tr>'}).join('')+
+   '</tbody></table>';
+}
+function cpTable(){
+  if(!LAST.length){toast('先点「计算镜头表」');return;}
+  var s=LAST.map(function(r){return (r.no<10?'0'+r.no:r.no)+'｜'+(r.sec?r.sec+'s':'待拆分')+'｜'+r.n+'字｜'+r.txt}).join('\n');
+  navigator.clipboard.writeText(s).then(function(){toast('镜头表已复制')},function(){toast('复制失败，请手动选择')});
+}
+function demo(){
+  document.getElementById('src').value='康熙三十一年的德州城，运河码头边有一间只有一间门面的烧鸡铺。掌柜贾健才有急事出门，只嘱咐伙计压好火。伙计一觉睡到日头偏西，锅里的鸡早已煮过了头。他慌忙捞出，香味却顺着风飘满了整条街。过路的行人闻香而来，一锅鸡很快卖空了。有人边吃边说，肉烂味香，连骨头嚼着都是酥的。贾掌柜由此摸出了门道：先用大火煮，再用小火焖，火候先武后文。这就是"扒"字的来处，也是德州扒鸡最原始的做法。他请邻街的马老秀才尝鸡起名，秀才尝罢脱口而出，好一个五香脱骨扒鸡。第二年元宵灯会上，扒鸡一炮而红。后来康熙第四次南巡到德州，住在启蒙老师田雯家中，田雯把扒鸡端上了桌。皇帝龙颜大悦，赞它真乃神州一奇也，还御笔题下寒绿堂三个字。到了乾隆年间，扒鸡艺人王暄被召进宫中，专做这一道菜。一只因为伙计打瞌睡而诞生的鸡，就这样成了宫里的贡品。你的家乡有没有这样一道"意外做成"的名菜？';
+  calc();
+}
+
+function expJSON(){
+  var data={exported:new Date().toISOString(),steps:S.step,checklist:S.chk,factCheck:S.fact,molds:S.mold};
+  var b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download='food-sop-progress.json';a.click();toast('进度已导出');
+}
+function clr(){
+  if(!confirm('确定清空本地保存的工序、自检、核查与指令模具修改？')) return;
+  localStorage.removeItem(K);S={step:{},chk:{},fact:{},mold:{}};
+  renderSteps();renderChk();renderFact();renderMolds();stat();toast('已清空');
+}
+
+renderSteps();renderChk();renderFact();renderMolds();stat();
+</script>
+</body>
+</html>
